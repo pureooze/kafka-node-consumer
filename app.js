@@ -1,8 +1,11 @@
 // content of index.js
 const http = require("http");
 const Kafka = require("node-rdkafka");
+const WebSocket = require("ws");
 const port = 3000;
 //http://ec2-18-188-76-12.us-east-2.compute.amazonaws.com/
+
+const ws = new WebSocket("ws://localhost:3001");
 
 var consumer = new Kafka.KafkaConsumer(
   {
@@ -20,14 +23,12 @@ consumer
   .on("ready", function() {
     consumer.subscribe(["SimpleProducerTopic"]);
 
-    // Consume from the librdtesting-01 topic. This is what determines
-    // the mode we are running in. By not specifying a callback (or specifying
-    // only a callback) we get messages as soon as they are available.
     consumer.consume();
   })
   .on("data", function(data) {
     // Output the actual message contents
     console.log(data.value.toString());
+    ws.send(data.value);
   });
 
 const requestHandler = (request, response) => {
