@@ -14,5 +14,5 @@ ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 RUN ["/bin/bash", "-c", "yarn install --pure-lockfile"]
 
-EXPOSE 3000
+EXPOSE 3000 3001
 ENTRYPOINT ["node", "app.js"]
